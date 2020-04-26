@@ -1,32 +1,23 @@
-#include <fstream>
-
 template <typename T>
 class Node
 {
-    Node<T>* next;
-    Node<T>* prev;
-    T value;
-
+    private:
+        T value;
+        Node<T>* prev = nullptr;
     public:
-        Node(T value) : next(nullptr), prev(nullptr), value(value){};
-        ~Node() = default;
+        Node(T value) : value(value), prev(nullptr){}
+
         void link(Node<T>* other)
         {
-            other->next = this;
             this->prev = other;
         }
 
-        Node* getNext()
-        {
-            return next; 
-        }
-
-        Node* getPrev()
+        Node<T>* get_prev()
         {
             return prev;
         }
-
-        T getValue()
+        
+        T get_value()
         {
             return value;
         }
@@ -36,157 +27,38 @@ template <typename T>
 class List
 {
     private:
-        Node<T>* front = nullptr;
-        Node<T>* back = nullptr;
-        int size = 0;
+        int size_ = 0;
+        Node<T>* back_ = nullptr;
     public:
-        List() = default;
-        ~List()
+        void push_back(T value)
         {
-            Node<T>* cur = front;
-            while(cur)
+            if(!size_)
             {
-                Node<T>* to_delete = cur;
-                cur = cur->getNext();
-                delete to_delete;
-            }
-        }
-
-        void pushBack(T value)
-        {
-            if(!back)
-            {
-                back = new Node<T>(value);
-                front = back;
-                ++size;
+                back_ = new Node<T>(value);
+                ++size_;
                 return;
             }
 
-            auto new_node = new Node<T>(value);
-            new_node->link(back);
-            back = new_node;
-            ++size;
+            Node<T>* new_node = new Node<T>(value);
+            new_node->link(back_);
+            ++size_;
         }
 
-        void pushFront(T value)
+        int size()
         {
-            if(!front)
-            {
-                pushBack(value);
-                return;
-            }
-            auto new_node = new Node<T>(value);
-            front->link(new_node);
-            front = new_node;
-            ++size;
+            return size_;
         }
 
         bool contains(T value)
         {
-            if(!size)
+            Node<T>* cur = back_;
+            while(cur && strcmp(cur->get_value(), value) != 0)
             {
-                return false;
+                cur = cur->get_prev();
             }
-
-            Node<T>* cur = front;
-            while(cur)
-            {
-                if(cur->getValue() == value)
-                {
-                    return true;
-                }
-                cur = cur->getNext();
-            }
-            return false;
+            return cur ? true : false;
         }
 
-        int find(T value)
-        {
-            if(!size)
-            {
-                return -1;
-            }
+        void erase(T value){}
 
-            Node<T>* cur = front;
-            int idx = 0;
-            while(cur)
-            {
-                if(cur->getValue() == value)
-                {
-                    return idx;
-                }
-                cur = cur->getNext();
-                ++idx;
-            }
-            return -1;
-        }
-
-        void pop_front()
-        {
-            front = front->getNext();
-            delete front->getPrev();
-            front->getPrev() = nullptr;
-            --size;
-        }
-
-        void pop_back()
-        {
-            back = back->getPrev();
-            delete back->getNext();
-            back->getNext() = nullptr;
-            --size;
-        }
-
-        void erase(T value)
-        {
-            if(front->getValue() == value)
-            {
-                pop_front();
-            }
-
-            Node<T>* cur = front;
-            int idx = 0;
-            while(cur->getNext())
-            {
-                if(cur->getValue() == value)
-                {
-                    --size;
-                    cur->getNext()->link(cur->getPrev);
-                    delete cur;
-                    return;
-                }
-                cur = cur->getNext();
-                ++idx;
-            }
-
-            if(back->getValue() == value)
-            {
-                pop_back();
-            }
-        }
-
-        int length()
-        {
-            return size;
-        }
-
-        void clear()
-        {
-            while(size)
-            {
-                pop_back();
-            }
-        }
-
-        void print(std::ofstream& out)
-        {
-            Node<T>* cur = front;
-            while(cur)
-            {
-                out << cur->getValue() << " ";
-                cur = cur->getNext();
-            }
-        }
 };
-
-

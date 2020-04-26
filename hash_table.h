@@ -1,4 +1,3 @@
-#include "custom_list.h"
 template <typename T, typename Functor>
 class HashTable
 {
@@ -37,11 +36,8 @@ class HashTable
        
         void add(T value)
         {
-            if(!contains(value))
-            {
-                int hashed = hash(value);
-                table[hashed].pushBack(value);
-            }
+            int hashed = hash(value);
+            table[hashed].push_back(value);
         }
 
         void remove(T value)
@@ -53,22 +49,14 @@ class HashTable
         bool contains(T value)
         {
             int hashed = hash(value);
-            auto lst = table[hashed];
-            return lst.contains(value);
+            return table[hashed].contains(value);
         }
 
         void dump_lists_lens(std::ofstream& out)
         {
             for(int i = 0; i < length; ++i)
             {
-                out << table[i].length() << "\n";
+                out << table[i].size() << "\n";
             }
         }
-        
-        void dump_list(int idx)
-        {
-            table[idx].print();
-        }
-
-        
 };

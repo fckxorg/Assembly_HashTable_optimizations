@@ -96,11 +96,28 @@ class JenkinsHash : public HashFunction
             {
                 hash += string[i++];
                 hash *= 1024;//hash += hash << 10;
-                hash /= 64;//hash ^= hash >> 6;
+                hash ^= hash / 64;//hash ^= hash >> 6;
             }
-            hash += hash * 8;//hash += hash << 3;
-            hash /= 2048;//hash ^= hash >> 11;
-            hash += hash * 32768; //hash += hash << 15;
+
+        asm("mov    eax, %1\n\t"       
+            "mov    ebx, eax\n\t"
+            "shl    ebx, 3\n\t"
+            "add    eax, ebx\n\t"
+            "mov    ebx, eax\n\t"
+            "shr    ebx, 11\n\t"
+            "xor    eax, ebx\n\t"
+            "mov    ebx, eax\n\t"
+            "shl    ebx, 15\n\t"
+            "add    eax, ebx\n\t"
+            "mov    %0, eax\n\t"
+            :"=r"(hash)             
+            :"r"(hash)     
+            : "eax", "ebx"            
+            );
+
+            /*hash += hash * 8;//hash += hash << 3;
+            hash ^= hash / 2048;//hash ^= hash >> 11;
+            hash += hash * 32768; //hash += hash << 15;*/
             return hash % TABLE_SIZE;
         }
 };

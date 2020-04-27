@@ -59,4 +59,12 @@ class HashTable
                 out << table[i].size() << "\n";
             }
         }
+
+        void clear()
+        {
+            for(int i = 0; i < TABLE_SIZE; ++i)
+            {
+                table[i].clear();
+            }
+        }
 };

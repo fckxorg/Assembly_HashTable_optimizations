@@ -30,6 +30,12 @@ class List
         int size_ = 0;
         Node<T>* back_ = nullptr;
     public:
+        List() = default;
+        ~List() 
+        {
+            clear();
+        }
+
         void push_back(T value)
         {
             if(!size_)
@@ -41,6 +47,7 @@ class List
 
             Node<T>* new_node = new Node<T>(value);
             new_node->link(back_);
+            back_ = new_node;
             ++size_;
         }
 
@@ -59,6 +66,44 @@ class List
             return cur ? true : false;
         }
 
-        void erase(T value){}
+        void pop_back()
+        {
+            if(size_)
+            {
+                Node<T>* old_back = back_;
+                back_ = back_->get_prev();
+                --size_;
+
+                delete old_back;
+            }
+        }
+
+        void erase(T value)
+        {
+            Node<T>* cur = back_;
+            Node<T>* next = nullptr;
+            while (cur && cur->get_value() != value)
+            {
+                next = cur;
+                cur = cur->get_prev();
+            }
+
+            if(!cur)
+            {
+                return;
+            }
+
+            next->link(cur->get_prev());
+            delete cur;
+            --size;
+        }
+
+        void clear()
+        {
+            while(size_)
+            {
+                pop_back();
+            }
+        }
 
 };

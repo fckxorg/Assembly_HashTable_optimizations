@@ -18,10 +18,10 @@ int main()
     char** words = new char*[N_WORDS]();
     for(int i = 0; i < N_WORDS; ++i)
     {
-        words[i] = new char[100]();    
+        words[i] = new char[WORD_SIZE]();    
     }
 
-    auto table = HashTable<char*, HASH>(TableSize, HASH());
+    auto table = HashTable<char*, HASH>(TABLE_SIZE, HASH());
 
 
     for(int i = 0; i < N_WORDS; ++i)

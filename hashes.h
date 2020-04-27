@@ -77,7 +77,7 @@ class ASCIIXorRotate : public HashFunction
                 hash |= oldest_bit;
                 ++string;
             }
-            return hash % TableSize;
+            return hash % TABLE_SIZE;
         }
 };
 
@@ -101,7 +101,7 @@ class JenkinsHash : public HashFunction
             hash += hash << 3;
             hash ^= hash >> 11;
             hash += hash << 15;
-            return hash % TableSize;
+            return hash % TABLE_SIZE;
         }
 };
 

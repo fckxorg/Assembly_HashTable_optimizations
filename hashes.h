@@ -95,12 +95,12 @@ class JenkinsHash : public HashFunction
             while (i != len) 
             {
                 hash += string[i++];
-                hash += hash << 10;
-                hash ^= hash >> 6;
+                hash *= 1024;//hash += hash << 10;
+                hash /= 64;//hash ^= hash >> 6;
             }
-            hash += hash << 3;
-            hash ^= hash >> 11;
-            hash += hash << 15;
+            hash += hash * 8;//hash += hash << 3;
+            hash /= 2048;//hash ^= hash >> 11;
+            hash += hash * 32768; //hash += hash << 15;
             return hash % TABLE_SIZE;
         }
 };

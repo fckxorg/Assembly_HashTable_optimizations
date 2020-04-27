@@ -16,14 +16,14 @@ class HashTable
             delete[] table;
         }
 
-        HashTable& operator=(const HashTable& other)
+        HashTable<T, Functor>& operator=(const HashTable<T, Functor>& other) noexcept
         {
             hash = other.hash;
             length = other.length;
             table = other.table;
         }
 
-        HashTable(const HashTable& other)
+        HashTable(const HashTable<T, Functor>& other)
         {
             hash = other.hash;
             length = other.length;
@@ -32,6 +32,17 @@ class HashTable
             {
                 table[i] = other.table[i];
             }
+        }
+
+        HashTable(HashTable<T, Functor>&& other) noexcept
+        {
+            swap(*this, other);
+        }
+
+        HashTable& operator=(HashTable<T, Functor>&& other) noexcept
+        {
+            swap(*this, other);
+            return *this;
         }
        
         void add(T value)
@@ -46,13 +57,13 @@ class HashTable
             table[hashed].erase(value);
         }
 
-        bool contains(T value)
+        bool contains(T value) noexcept
         {
             int hashed = hash(value);
             return table[hashed].contains(value);
         }
 
-        void dump_lists_lens(std::ofstream& out)
+        void dump_lists_lens(std::ofstream& out) noexcept
         {
             for(int i = 0; i < length; ++i)
             {
@@ -66,5 +77,12 @@ class HashTable
             {
                 table[i].clear();
             }
+        }
+
+        friend void swap(HashTable<T, Functor>& first, HashTable<T, Functor>& second) noexcept
+        {
+            std::swap(first.length, second.length);
+            std::swap(first.hash, second.hash);
+            std::swap(first.table, second.table);
         }
 };

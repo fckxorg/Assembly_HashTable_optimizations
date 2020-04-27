@@ -73,7 +73,7 @@ class List
                 Node<T>* old_back = back_;
                 back_ = back_->get_prev();
                 --size_;
-
+                
                 delete old_back;
             }
         }

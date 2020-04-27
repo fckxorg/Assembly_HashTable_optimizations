@@ -15,17 +15,13 @@ int main()
 {
     std::ifstream in;
     in.open("test_data/word_set.txt");
+
+    auto table = HashTable<char*, HASH>(TABLE_SIZE, HASH());
     char** words = new char*[N_WORDS]();
+    
     for(int i = 0; i < N_WORDS; ++i)
     {
         words[i] = new char[WORD_SIZE]();    
-    }
-
-    auto table = HashTable<char*, HASH>(TABLE_SIZE, HASH());
-
-
-    for(int i = 0; i < N_WORDS; ++i)
-    {
         in >> words[i];
         table.add(words[i]);
     }

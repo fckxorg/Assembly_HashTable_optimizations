@@ -80,7 +80,7 @@ class ASCIIXorRotate : public HashFunction
             return hash % TABLE_SIZE;
         }
 };
-
+/*
 class JenkinsHash : public HashFunction
 {
     public:
@@ -102,6 +102,53 @@ class JenkinsHash : public HashFunction
             hash += hash << 3;
             hash ^= hash >> 11;
             hash += hash << 15;
+            return hash % TABLE_SIZE;
+        }
+};
+*/
+class JenkinsHash : public HashFunction
+{
+    public:
+        JenkinsHash() = default;
+        ~JenkinsHash() = default;
+        inline int operator()(char* string)
+        {
+            uint32_t len = strlen(string);
+            uint32_t hash = 0;
+
+        asm("mov    eax, %1\n\t"       
+            "mov    ecx, %2\n\t"
+            "mov    rdi, %3\n\t"
+            "jenkins_loop:\n\t"
+            "cmp    rcx, 0\n\t"
+            "je     jenkins_loop_end\n\t"
+            "dec    ecx\n\t"
+            "xor    ebx, ebx\n\t"
+            "mov    bl, byte [rdi]\n\t"
+            "add    eax, ebx\n\t"
+            "mov    ebx, eax\n\t"
+            "shl    ebx, 10\n\t"
+            "add    eax, ebx\n\t"
+            "mov    ebx, eax\n\t"
+            "shr    ebx, 6\n\t"
+            "xor    eax, ebx\n\t"
+            "jmp    jenkins_loop\n\t"
+            "jenkins_loop_end:\n\t"
+            "mov    ebx, eax\n\t"
+            "shl    ebx, 3\n\t"
+            "add    eax, ebx\n\t"
+            "mov    ebx, eax\n\t"
+            "shr    ebx, 11\n\t"
+            "xor    eax, ebx\n\t"
+            "mov    ebx, eax\n\t"
+            "shl    ebx, 15\n\t"
+            "add    eax, ebx\n\t"
+            "mov    %0, eax\n\t"
+            :"=r"(hash)             
+            :"r"(hash), "r"(len), "r"(string)     
+            : "eax", "ebx", "ecx", "rdi"            
+            );
+
             return hash % TABLE_SIZE;
         }
 };

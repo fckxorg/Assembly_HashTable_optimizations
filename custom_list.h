@@ -1,26 +1,10 @@
 template <typename T>
 class Node
 {
-    private:
-        T value;
-        Node<T>* prev = nullptr;
     public:
+        Node<T>* prev = nullptr;
+        T value;
         Node(T value) : value(value), prev(nullptr){}
-
-        void link(Node<T>* other)
-        {
-            this->prev = other;
-        }
-
-        Node<T>* get_prev()
-        {
-            return prev;
-        }
-        
-        T get_value()
-        {
-            return value;
-        }
 };
 
 template <typename T>
@@ -46,7 +30,7 @@ class List
             }
 
             Node<T>* new_node = new Node<T>(value);
-            new_node->link(back_);
+            new_node->prev = back_;
             back_ = new_node;
             ++size_;
         }
@@ -59,9 +43,9 @@ class List
         bool contains(T value)
         {
             Node<T>* cur = back_;
-            while(cur && strcmp(cur->get_value(), value) != 0)
+            while(cur && strcmp(cur->value, value) != 0)
             {
-                cur = cur->get_prev();
+                cur = cur->prev;
             }
             return cur ? true : false;
         }
@@ -71,7 +55,7 @@ class List
             if(size_)
             {
                 Node<T>* old_back = back_;
-                back_ = back_->get_prev();
+                back_ = back_->prev;
                 --size_;
                 
                 delete old_back;
@@ -82,10 +66,10 @@ class List
         {
             Node<T>* cur = back_;
             Node<T>* next = nullptr;
-            while (cur && cur->get_value() != value)
+            while (cur && cur->value != value)
             {
                 next = cur;
-                cur = cur->get_prev();
+                cur = cur->prev;
             }
 
             if(!cur)
@@ -93,9 +77,9 @@ class List
                 return;
             }
 
-            next->link(cur->get_prev());
+            next->prev = cur->prev;
             delete cur;
-            --size;
+            --size_;
         }
 
         void clear()

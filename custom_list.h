@@ -1,3 +1,20 @@
+bool fastcmpeq(char* str1, char* str2)
+{
+    unsigned long long* chunk_arr1 = reinterpret_cast<unsigned long long*>(str1);
+    unsigned long long* chunk_arr2 = reinterpret_cast<unsigned long long*>(str2);
+    for(int i = 0; i < 6; ++i)
+    {
+        unsigned long long res = chunk_arr1[0] ^ chunk_arr2[0];
+        
+        if(res)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+
 template <typename T>
 class Node
 {
@@ -43,7 +60,7 @@ class List
         bool contains(T value)
         {
             Node<T>* cur = back_;
-            while(cur && strcmp(cur->value, value) != 0)
+            while(cur && fastcmpeq(cur->value, value) != 0)
             {
                 cur = cur->prev;
             }

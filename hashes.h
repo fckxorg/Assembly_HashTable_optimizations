@@ -2,6 +2,41 @@
 #include <cstring>
 #include "config.h"
 
+inline int fast_len(char* str)
+{
+    unsigned long long* chunk = reinterpret_cast<unsigned long long*>(str);
+    /*unsigned long long checker = 0;
+    checker = ~checker;
+
+    for(int i = 0; i < 6; ++i)
+    {
+        unsigned long long cur = *chunk ^ checker;
+        ++chunk;
+        if(cur == checker)
+            return i * 8;
+    }*/
+    unsigned long long int res = 0;
+
+    asm("mov    rcx, 0\n\t"
+        "mov    rdi, %1\n\t"
+        "mov    rbx, 0\n\t"
+        "not    rbx\n\t"
+        "fast_len_loop:\n\t"
+        "cmp    rcx, 6\n\t"
+        "je     fast_len_loop_end\n\t"
+        "mov    rax, [rdi]\n\t"
+        "xor    rax, rbx\n\t"
+        "inc    rcx\n\t"
+        "cmp    rax, rbx\n\t"
+        "jne    fast_len_loop\n\t"
+        "fast_len_loop_end:\n\t"
+        "shl    rcx, 3\n\t"
+        "mov    %0, rcx\n\t"
+        :"=r"(res)
+        :"r"(chunk)
+        :"rax", "rcx", "rdi", "rbx");
+    return res;
+}
 
 class HashFunction
 {
@@ -113,7 +148,7 @@ class JenkinsHash : public HashFunction
         ~JenkinsHash() = default;
         inline int operator()(char* string)
         {
-            uint32_t len = strlen(string);
+            uint32_t len = fast_len(string); //strlen(string);
             uint32_t hash = 0;
 
         asm("mov    eax, %1\n\t"       

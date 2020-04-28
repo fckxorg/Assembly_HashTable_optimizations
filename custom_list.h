@@ -14,6 +14,8 @@ inline bool fastcmpeq(char* str1, char* str2)
             "mov    rbx, [rsi]\n\t"
             "xor    rax, rbx\n\t"
             "cmp    rax, 0\n\t"
+            "add    rsi, 8\n\t"
+            "add    rdi, 8\n\t"
             "je     cmp_loop\n\t"
             "cmp_loop_end:\n\t"
             "mov    %0, rax\n\t"

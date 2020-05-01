@@ -1,33 +1,4 @@
-inline bool fastcmpeq(char* str1, char* str2)
-{
-    unsigned long long* chunk_arr1 = reinterpret_cast<unsigned long long*>(str1);
-    unsigned long long* chunk_arr2 = reinterpret_cast<unsigned long long*>(str2);
-    unsigned long long int result = 0;
-        asm("mov    rdi, %1\n\t"       
-            "mov    rsi, %2\n\t"
-            "mov    ecx, 6\n\t"
-            "cmp_loop:\n\t"
-            "cmp    ecx, 0\n\t"
-            "je     cmp_loop_end\n\t"
-            "dec    ecx\n\t"
-            "mov    rax, [rdi]\n\t"
-            "mov    rbx, [rsi]\n\t"
-            "xor    rax, rbx\n\t"
-            "cmp    rax, 0\n\t"
-            "add    rsi, 8\n\t"
-            "add    rdi, 8\n\t"
-            "je     cmp_loop\n\t"
-            "cmp_loop_end:\n\t"
-            "mov    %0, rax\n\t"
-            :"=r"(result)             
-            :"r"(chunk_arr1), "r"(chunk_arr2)    
-            : "rax", "rbx", "rcx", "rdi", "rsi"        
-            );
-
-    return !result;
-}
-
-
+#include "faster_string_functions.h"
 template <typename T>
 class Node
 {

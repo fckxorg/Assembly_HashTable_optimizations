@@ -35,6 +35,7 @@ class Node
         Node<T>* prev = nullptr;
         T value;
         Node(T value) : value(value), prev(nullptr){}
+        ~Node() = default;
 };
 
 template <typename T>
@@ -65,12 +66,12 @@ class List
             ++size_;
         }
 
-        int size()
+        int size() const noexcept
         {
             return size_;
         }
 
-        bool contains(T value)
+        bool contains(T value) const noexcept
         {
             Node<T>* cur = back_;
             while(cur && fastcmpeq(cur->value, value) != 0)

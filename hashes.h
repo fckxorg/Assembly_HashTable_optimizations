@@ -5,17 +5,7 @@
 inline int fast_len(char* str)
 {
     unsigned long long* chunk = reinterpret_cast<unsigned long long*>(str);
-    /*unsigned long long checker = 0;
-    checker = ~checker;
-
-    for(int i = 0; i < 6; ++i)
-    {
-        unsigned long long cur = *chunk ^ checker;
-        ++chunk;
-        if(cur == checker)
-            return i * 8;
-    }*/
-    unsigned long long int res = 0;
+    int res = 0;
 
     asm("mov    rcx, 0\n\t"
         "mov    rdi, %1\n\t"
@@ -31,7 +21,7 @@ inline int fast_len(char* str)
         "jne    fast_len_loop\n\t"
         "fast_len_loop_end:\n\t"
         "shl    rcx, 3\n\t"
-        "mov    %0, rcx\n\t"
+        "mov    %0, ecx\n\t"
         :"=r"(res)
         :"r"(chunk)
         :"rax", "rcx", "rdi", "rbx");

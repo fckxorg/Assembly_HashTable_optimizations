@@ -1,3 +1,4 @@
+#include "custom_list.h"
 template <typename T, typename Functor>
 class HashTable
 {
@@ -63,7 +64,7 @@ class HashTable
             return table[hashed].contains(value);
         }
 
-        void dump_lists_lens(std::ofstream& out) noexcept
+        void dump_lists_lens(std::ofstream& out) const
         {
             for(int i = 0; i < length; ++i)
             {

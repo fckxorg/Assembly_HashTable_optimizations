@@ -6,9 +6,9 @@ with open("gaijin.txt", "r") as file:
         raw_tokens = re.sub(r'([^\s\w]|_)+', '', line)
         tokens = raw_tokens.split()
         garbage = ['a', 'the', 'in', 'of', 'and', 'to', 'in', 'is']
-        for el in garbage: 
+        for el in garbage:
             while el in tokens:
-                tokens.remove(el);
+                tokens.remove(el)
         data += tokens
 
 

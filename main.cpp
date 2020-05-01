@@ -2,19 +2,16 @@
 #include <algorithm>
 #include <random>
 #include <fstream>
-#include <list>
 
 #include "hashes.h"
-#include "custom_list.h"
 #include "hash_table.h"
 
-
-#define HASH JenkinsHash
+typedef JenkinsHash HASH;
 
 int main()
 {
     std::ifstream in;
-    in.open("test_data/word_set.txt");
+    in.open(WORD_SET);
 
     auto table = HashTable<char*, HASH>(TABLE_SIZE, HASH());
     char** words = new char*[N_WORDS]();
@@ -33,8 +30,9 @@ int main()
     }
 
     std::ofstream out;
-    out.open("test.out");
+    out.open(LOG_PATH);
     table.dump_lists_lens(out);
+
     out.close();
     in.close();
 

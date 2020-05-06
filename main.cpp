@@ -14,19 +14,18 @@ int main()
     in.open(WORD_SET);
 
     auto table = HashTable<char*, HASH>(TABLE_SIZE, HASH());
-    char** words = new char*[N_WORDS]();
+    char* words = new char[N_WORDS * WORD_SIZE]();
     
-    for(int i = 0; i < N_WORDS; ++i)
+    for(int i = 0; i < N_WORDS * WORD_SIZE; i += WORD_SIZE)
     {
-        words[i] = new char[WORD_SIZE]();    
-        in >> words[i];
-        table.add(words[i]);
+        in >> (words + i);
+        table.add(words + i);
     }
 
     for(int i = 0; i < N_SAMPLES; ++i)
     {
         int word_idx = rand() % N_WORDS;
-        table.contains(words[word_idx]);
+        table.contains(words + word_idx * 48);
     }
 
     std::ofstream out;
@@ -35,11 +34,6 @@ int main()
 
     out.close();
     in.close();
-
-    for(int i = 0; i < N_WORDS; ++i)
-    {
-        delete[] words[i];
-    }
 
     delete[] words;
     return 0;
